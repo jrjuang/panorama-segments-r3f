@@ -4,7 +4,6 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
-// #region view space shader
 import { extend } from "@react-three/fiber";
 import { shaderMaterial } from "@react-three/drei";
 const SkyboxMaterial = shaderMaterial(
@@ -28,10 +27,23 @@ const SkyboxMaterial = shaderMaterial(
     }
   `
 );
-
 extend({ SkyboxMaterial });
-// #endregion
 
+import { useRef } from "react"
+import { useFrame } from "@react-three/fiber"
+const skybox = () => {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((clock) => {
+    if (!ref.current) { return }
+    ref.current.material.uniforms.time.value = clock.getElapsedTime();
+  });
+  return (
+    <mesh ref={ref} scale={[-1, 1, 1]}>
+      <boxGeometry args={[100, 100, 100]} />
+      <SkyboxMaterial side={TreeWalker.BackSide} />
+    </mesh>
+  );
+};
 
 const Model = () => {
   const { scene } = useGLTF('Suzanne.glb')
@@ -41,6 +53,7 @@ const Model = () => {
 const App = () => {
   return (
     <Canvas style={{ height: '100vh', width: '100vw' }}>
+      <skybox />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <Model />
@@ -53,7 +66,7 @@ const App = () => {
         <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
       </mesh> */}
       {/* <Environment files="studio_small_09_4k.exr" background/> */}
-      <Environment files="masks2_BGR.png" background/>
+      <Environment files="masks2_BGR.png" background />
       <OrbitControls />
     </Canvas>
   )
