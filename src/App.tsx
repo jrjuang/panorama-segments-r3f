@@ -40,7 +40,7 @@ const Skybox = () => {
   return (
     <mesh ref={ref} scale={[-1, 1, 1]}>
       <boxGeometry args={[100, 100, 100]} />
-      <skyboxMaterial side={TreeWalker.BackSide} />
+      <skyboxMaterial side={THREE.BackSide} />
     </mesh>
   );
 };
