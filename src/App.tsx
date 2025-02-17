@@ -31,7 +31,7 @@ extend({ SkyboxMaterial });
 
 import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-const skybox = () => {
+const Skybox = () => {
   const ref = useRef<THREE.Mesh>(null);
   useFrame(({clock}) => {
     if (!ref.current) { return }
@@ -53,7 +53,7 @@ const Model = () => {
 const App = () => {
   return (
     <Canvas style={{ height: '100vh', width: '100vw' }}>
-      <skybox />
+      <Skybox />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <Model />
