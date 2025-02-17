@@ -65,8 +65,7 @@ const App = () => {
         <sphereGeometry args={[1, 32, 16]} />
         <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
       </mesh> */}
-      {/* <Environment files="studio_small_09_4k.exr" background/> */}
-      <Environment files="masks2_BGR.png" background />
+      <Environment files="studio_small_09_4k.exr" background/>
       <OrbitControls />
     </Canvas>
   )
