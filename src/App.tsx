@@ -38,7 +38,7 @@ const Skybox = () => {
     ref.current.material.uniforms.time.value = clock.getElapsedTime();
   });
   return (
-    <mesh ref={ref} scale={[-1, 1, 1]}>
+    <mesh ref={ref} scale={[1, 1, 1]}>
       <boxGeometry args={[100, 100, 100]} />
       <skyboxMaterial side={THREE.BackSide} />
     </mesh>
