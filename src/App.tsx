@@ -33,14 +33,14 @@ import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
 const skybox = () => {
   const ref = useRef<THREE.Mesh>(null);
-  useFrame((clock) => {
+  useFrame(({clock}) => {
     if (!ref.current) { return }
     ref.current.material.uniforms.time.value = clock.getElapsedTime();
   });
   return (
     <mesh ref={ref} scale={[-1, 1, 1]}>
       <boxGeometry args={[100, 100, 100]} />
-      <SkyboxMaterial side={TreeWalker.BackSide} />
+      <skyboxMaterial side={TreeWalker.BackSide} />
     </mesh>
   );
 };
