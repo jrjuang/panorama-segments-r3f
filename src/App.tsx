@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useRef, useEffect } from 'react'
-import { Canvas useTree} from '@react-three/fiber'
+import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -11,12 +11,13 @@ const Model = () => {
 import Skybox from "./Skybox"
 const App = () => {
   const canvasRef = useRef(null);
+  const cameraRef = useRef<THREE.PerpectiveCamera|null>(null);
   // Get the mouse cursor position
   useEffect(() => {
+    const camera = cameraRef.current;
     const canvas = canvasRef.current;
-    const { camera, size } = useThree();
     function mouseUp(event) {
-      let cursorDir = new THREE.Vector3(event.clientX/size.width * 2 -1, -event.clientY/size.height * 2 + 1, 0);
+      let cursorDir = new THREE.Vector3(event.clientX/canvas.width * 2 -1, -event.clientY/canvas.height * 2 + 1, 0);
       cursorDir.unproject(camera);
       cursorDir.normalize();
       const cursorRay = { origin: camera.position, direction: cursorDir};
@@ -29,7 +30,7 @@ const App = () => {
     return () => canvas.removeEventListener("mouseup", mouseUp);
   }, []);
   return (
-    <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }}>
+    <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] } onCreated={({camera}) => cameraRef.current = camera} }>
       <Skybox />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
