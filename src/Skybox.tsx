@@ -30,7 +30,7 @@ const SkyboxMaterial = shaderMaterial(
       float gradient = smoothstep(-1.0, 1.0, normalize(vWorldPosition).y);
       //gl_FragColor = vec4(mix(vec3(0.8, 0.9, 1.0), color, gradient), 1.0);
       //debug testing
-      gl_FragColor = vec4(mix(texture2D(masks, vUv), color, gradient), sin(time) * 0.5 + 0.5);
+      gl_FragColor = vec4(mix(texture2D(masks, vUv).rgb, color, gradient), sin(time) * 0.5 + 0.5);
     }
   `
 );
