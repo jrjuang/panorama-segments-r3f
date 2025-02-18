@@ -56,7 +56,7 @@ const Skybox = () => {
         const pos = camera.position;
         ref.current.position.set(pos.x, pos.y, pos.z);
         const r = 0.5 * (camera.near + camera.far)
-        ref.current.geometry.scale.set(r, r, r);
+        ref.current.geometry.scale(r, r, r);
     });
 
     return (
