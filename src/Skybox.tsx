@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { extend, useLoader } from "@react-three/fiber";
+import { extend } from "@react-three/fiber";
 import { shaderMaterial } from "@react-three/drei";
 import * as THREE from "three"
 const SkyboxMaterial = shaderMaterial(
@@ -42,12 +42,14 @@ import { useFrame } from "@react-three/fiber"
 const Skybox = () => {
     const ref = useRef<THREE.Mesh>(null);
 
-    useEffect(()=>{
-        ref.current.material.uniforms.masks = useLoader(THREE.TextureLoader, "masks2_BGR.png")
-    },[ref.current]);
+    useEffect(() => {
+        const loader = new THREE.TextureLoader();
+        if (!ref.current) { return; }
+        ref.current.material.uniforms.masks = loader.load("masks2_BGR.png");
+    }, [ref.current]);
 
     useFrame(({ clock }) => {
-        if (!ref.current) { return }
+        if (!ref.current) { return; }
         const material = ref.current.material;
         material.uniforms.time.value = clock.getElapsedTime();
     });
