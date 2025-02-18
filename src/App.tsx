@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useRef, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas useTree} from '@react-three/fiber'
 import { OrbitControls, Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -11,11 +11,19 @@ const Model = () => {
 import Skybox from "./Skybox"
 const App = () => {
   const canvasRef = useRef(null);
+  // Get the mouse cursor position
   useEffect(() => {
     const canvas = canvasRef.current;
+    const { camera, size } = useThree();
     function mouseUp(event) {
+      let cursorDir = new THREE.Vector3(event.clientX/size.width * 2 -1, -event.clientY/size.height * 2 + 1, 0);
+      cursorDir.unproject(camera);
+      cursorDir.normalize();
+      const cursorRay = { origin: camera.position, direction: cursorDir};
       //debug
       console.log(event);
+      console.log(camera.matrixWorldInverse)
+      console.log(cursorRay);
     }
     canvas.addEventListener("mouseup", mouseUp);
     return () => canvas.removeEventListener("mouseup", mouseUp);
