@@ -11,7 +11,7 @@ const Model = () => {
 import Skybox from "./Skybox"
 const App = () => {
   return (
-    <Canvas style={{ height: '100vh', width: '100vw' }} camera={{position:[0, -0.5 ,1]}}>
+    <Canvas style={{ height: '100vh', width: '100vw' }} camera={{position:[0, -0.25 ,2]}}>
       <Skybox />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
