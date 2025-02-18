@@ -8,21 +8,23 @@ const SkyboxMaterial = shaderMaterial(
         transparent: true,
         depthWrite: false,
         blending: THREE.NormalBlending,
-        masks: null
+        masks: { value: null }
     },
     `
     varying vec3 vWorldPosition;
-    varying vec2 vUv;
+    varying vec2 vUV;
     void main() {
       vec4 worldPosition = modelMatrix * vec4(position, 1.0);
       vWorldPosition = worldPosition.xyz;
       gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);
+      vUV = uv;
+      vUV.x = -vUV.x;
     }
   `,
     `
     precision mediump float;
     varying vec3 vWorldPosition;
-    varying vec2 vUv;
+    varying vec2 vUV;
     uniform float time;
     uniform sampler2D masks;
 
@@ -31,7 +33,7 @@ const SkyboxMaterial = shaderMaterial(
       float gradient = smoothstep(-1.0, 1.0, normalize(vWorldPosition).y);
       //gl_FragColor = vec4(mix(vec3(0.8, 0.9, 1.0), color, gradient), 1.0);
       //debug testing
-      gl_FragColor = vec4(mix(texture2D(masks, vUv).rgb, color, gradient), sin(time) * 0.5 + 0.5);
+      gl_FragColor = vec4(texture2D(masks, vUV).rgb, sin(time) * 0.5 + 0.5);
     }
   `
 );
@@ -45,7 +47,7 @@ const Skybox = () => {
     useEffect(() => {
         const loader = new THREE.TextureLoader();
         if (!ref.current) { return; }
-        ref.current.material.uniforms.masks = loader.load("masks2_BGR.png");
+        ref.current.material.uniforms.masks.value = loader.load("masks2_BGR.png");
     }, [ref.current]);
 
     useFrame(({ clock }) => {
@@ -56,7 +58,7 @@ const Skybox = () => {
 
     return (
         <mesh ref={ref} scale={[1, 1, 1]}>
-            <boxGeometry args={[100, 100, 100]} />
+            <sphereGeometry args={[100, 32, 16]} />
             <skyboxMaterial side={THREE.BackSide} />
         </mesh>
     );
