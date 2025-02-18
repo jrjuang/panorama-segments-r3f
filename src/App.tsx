@@ -18,25 +18,25 @@ const App = () => {
       console.log(event);
     }
     canvas.addEventListener("mouseup", mouseUp);
-    return (
-      return () => canvas.removeEventListener("mouseup", mouseUp);
+    return () => canvas.removeEventListener("mouseup", mouseUp);
   }, []);
-  <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }}>
-    <Skybox />
-    <ambientLight />
-    <pointLight position={[1, 5, 2]} />
-    <Model />
-    <mesh>
-      <boxGeometry args={[8, 8, 8]} />
-      <meshStandardMaterial color="orange" side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
-    </mesh>
-    <mesh scale={[16, 16, 16]} position={[0, 0, 0]}>
-      <sphereGeometry args={[1, 32, 16]} />
-      <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
-    </mesh>
-    <Environment files="studio_small_09_4k.exr" background />
-    <OrbitControls />
-  </Canvas>
+  return (
+    <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }}>
+      <Skybox />
+      <ambientLight />
+      <pointLight position={[1, 5, 2]} />
+      <Model />
+      <mesh>
+        <boxGeometry args={[8, 8, 8]} />
+        <meshStandardMaterial color="orange" side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
+      </mesh>
+      <mesh scale={[16, 16, 16]} position={[0, 0, 0]}>
+        <sphereGeometry args={[1, 32, 16]} />
+        <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
+      </mesh>
+      <Environment files="studio_small_09_4k.exr" background />
+      <OrbitControls />
+    </Canvas>
   )
 }
 
