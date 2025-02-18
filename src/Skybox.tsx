@@ -55,12 +55,13 @@ const Skybox = () => {
         material.uniforms.time.value = clock.getElapsedTime();
         const pos = camera.position;
         ref.current.position.set(pos.x, pos.y, pos.z);
-        ref.current.geometry.radius = camera.nearClippingPlane;
+        const r = 0.5 * (camera.near + camera.far)
+        ref.current.geometry.scale.set(r, r, r);
     });
 
     return (
-        <mesh ref={ref} scale={[1, 1, 1]}>
-            <sphereGeometry args={[100, 32, 16]} />
+        <mesh ref={ref} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
+            <sphereGeometry args={[1, 32, 16]} />
             <skyboxMaterial side={THREE.BackSide} />
         </mesh>
     );
