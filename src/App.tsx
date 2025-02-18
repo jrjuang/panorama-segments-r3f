@@ -11,16 +11,16 @@ const Model = () => {
 import Skybox from "./Skybox"
 const App = () => {
   const canvasRef = useRef(null);
-  const cameraRef = useRef<THREE.PerpectiveCamera|null>(null);
+  const cameraRef = useRef<THREE.PerpectiveCamera | null>(null);
   // Get the mouse cursor position
   useEffect(() => {
-    const camera = cameraRef.current;
-    const canvas = canvasRef.current;
     function mouseUp(event) {
-      let cursorDir = new THREE.Vector3(event.clientX/canvas.width * 2 -1, -event.clientY/canvas.height * 2 + 1, 0);
+      const camera = cameraRef.current;
+      const canvas = canvasRef.current;
+      let cursorDir = new THREE.Vector3(event.clientX / canvas.width * 2 - 1, -event.clientY / canvas.height * 2 + 1, 0);
       cursorDir.unproject(camera);
       cursorDir.normalize();
-      const cursorRay = { origin: camera.position, direction: cursorDir};
+      const cursorRay = { origin: camera.position, direction: cursorDir };
       //debug
       console.log(event);
       console.log(camera.matrixWorldInverse)
@@ -30,7 +30,7 @@ const App = () => {
     return () => canvas.removeEventListener("mouseup", mouseUp);
   }, []);
   return (
-    <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] } onCreated={({camera}) => cameraRef.current = camera} }>
+    <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >
       <Skybox />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
