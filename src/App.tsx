@@ -13,9 +13,6 @@ const App = () => {
   const canvasRef = useRef(null);
   const cameraRef = useRef<THREE.PerpectiveCamera | null>(null);
   const skyboxRef = useRef<THREE.Mesh | null>(null);
-  useFrame(() => {
-    skyboxRef.current.position = cameraRef.current.position;
-  });
   // Get the mouse cursor position
   useEffect(() => {
     function mouseUp(event) {
@@ -36,7 +33,7 @@ const App = () => {
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >
-      <Skybox ref={skyboxRef} />
+      <Skybox ref={skyboxRef} camera={cameraRef.current} />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <Model />

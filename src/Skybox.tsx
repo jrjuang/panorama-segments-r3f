@@ -18,7 +18,7 @@ const SkyboxMaterial = shaderMaterial(
       vWorldPosition = worldPosition.xyz;
       gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);
       vUV = uv;
-      vUV.x = -vUV.x;
+      vUV.x = -vUV.x + 1.0;
     }
   `,
     `
@@ -41,7 +41,7 @@ extend({ SkyboxMaterial });
 
 import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-const Skybox = () => {
+const Skybox = (camera) => {
     const ref = useRef<THREE.Mesh>(null);
 
     useEffect(() => {
@@ -54,6 +54,7 @@ const Skybox = () => {
         if (!ref.current) { return; }
         const material = ref.current.material;
         material.uniforms.time.value = clock.getElapsedTime();
+        ref.position = camera.position;
     });
 
     return (
