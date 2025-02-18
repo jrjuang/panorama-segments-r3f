@@ -1,8 +1,12 @@
-import { extend } from "@react-three/fiber";
+import { extend, useLoader } from "@react-three/fiber";
 import { shaderMaterial } from "@react-three/drei";
 import * as THREE from "three"
 const SkyboxMaterial = shaderMaterial(
-  { time: 0 },
+  { time: 0,
+    transparent: true,
+    depthWrite: false,
+    blending: TREE.NormalBlending
+   },
   `
     varying vec3 vWorldPosition;
     void main() {
@@ -30,7 +34,9 @@ const Skybox = () => {
   const ref = useRef<THREE.Mesh>(null);
   useFrame(({clock}) => {
     if (!ref.current) { return }
-    ref.current.material.uniforms.time.value = clock.getElapsedTime();
+    const material = ref.current.material;
+    material.uniforms.time.value = clock.getElapsedTime();
+    material.uniforms.uTexture.value = useLoader(THREE.TextureLoader, "masks2_BGR.png");
   });
   return (
     <mesh ref={ref} scale={[1, 1, 1]}>
