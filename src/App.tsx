@@ -11,13 +11,16 @@ const Model = () => {
 import Skybox from "./Skybox"
 const App = () => {
   const canvasRef = useRef(null);
-  return (
-    useEffect(() => {
-      const canvas = canvasRef.current;
-      function mouseUp(event) {console.log(event);} 
-      canvas.addEventListener("mouseup" mouseUp);
-      return () => canvas.removeEventListener("mouseup" mouseUp);
-    }, []);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    function mouseUp(event) {
+      //debug
+      console.log(event);
+    }
+    canvas.addEventListener("mouseup", mouseUp);
+    return (
+      return () => canvas.removeEventListener("mouseup", mouseUp);
+  }, []);
   <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }}>
     <Skybox />
     <ambientLight />
