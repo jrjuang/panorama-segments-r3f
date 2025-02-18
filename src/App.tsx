@@ -26,7 +26,7 @@ const App = () => {
       console.log(camera.matrixWorldInverse)
       console.log(cursorRay);
     }
-    canvas.addEventListener("mouseup", mouseUp);
+    canvasRef.current.addEventListener("mouseup", mouseUp);
     return () => canvas.removeEventListener("mouseup", mouseUp);
   }, []);
   return (
