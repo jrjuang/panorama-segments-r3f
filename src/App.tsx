@@ -26,8 +26,9 @@ const App = () => {
       console.log(camera.matrixWorldInverse)
       console.log(cursorRay);
     }
-    canvasRef.current.addEventListener("mouseup", mouseUp);
-    return () => canvasRef.current.removeEventListener("mouseup", mouseUp);
+    const c = canvasRef.current;
+    c.addEventListener("mouseup", mouseUp);
+    return () => c.removeEventListener("mouseup", mouseUp);
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >

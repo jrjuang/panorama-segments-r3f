@@ -5,7 +5,7 @@ const SkyboxMaterial = shaderMaterial(
   { time: 0,
     transparent: true,
     depthWrite: false,
-    blending: TREE.NormalBlending
+    blending: THREE.NormalBlending
    },
   `
     varying vec3 vWorldPosition;
