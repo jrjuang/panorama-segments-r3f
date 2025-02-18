@@ -17,10 +17,10 @@ const App = () => {
       <pointLight position={[1, 5, 2]} />
       <Model />
       <mesh>
-        <boxGeometry args={[1, 1, 1]} />
+        <boxGeometry args={[3, 3, 3]} />
         <meshStandardMaterial color="orange" side={THREE.DoubleSide} args={[{metalness: 1, roughness: 0}]} />
       </mesh>
-      <mesh scale={[10, 10, 10]} position={[0, 0, 0]}>
+      <mesh scale={[9, 9, 9]} position={[0, 0, 0]}>
         <sphereGeometry args={[1, 32, 16]} />
         <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
       </mesh>
