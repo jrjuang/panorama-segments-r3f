@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { extend } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
+import { extend, useFrame, useThree } from "@react-three/fiber";
 import { shaderMaterial } from "@react-three/drei";
 import * as THREE from "three"
 const SkyboxMaterial = shaderMaterial(
@@ -39,8 +39,6 @@ const SkyboxMaterial = shaderMaterial(
 );
 extend({ SkyboxMaterial });
 
-import { useRef } from "react"
-import { useFrame } from "@react-three/fiber"
 const Skybox = () => {
     const ref = useRef<THREE.Mesh>(null);
 
