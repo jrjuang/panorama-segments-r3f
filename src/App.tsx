@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useRef, useEffect } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -12,7 +12,6 @@ import Skybox from "./Skybox"
 const App = () => {
   const canvasRef = useRef(null);
   const cameraRef = useRef<THREE.PerpectiveCamera | null>(null);
-  const skyboxRef = useRef<THREE.Mesh | null>(null);
   // Get the mouse cursor position
   useEffect(() => {
     function mouseUp(event) {
@@ -33,7 +32,7 @@ const App = () => {
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >
-      <Skybox ref={skyboxRef} />
+      <Skybox />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <Model />

@@ -16,7 +16,7 @@ const SkyboxMaterial = shaderMaterial(
     void main() {
       vec4 worldPosition = modelMatrix * vec4(position, 1.0);
       vWorldPosition = worldPosition.xyz;
-      gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);
+      gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
       vUV = uv;
       vUV.x = -vUV.x + 1.0;
     }
@@ -55,7 +55,9 @@ const Skybox = () => {
         if (!ref.current) { return; }
         const material = ref.current.material;
         material.uniforms.time.value = clock.getElapsedTime();
-        ref.position = camera.position;
+        const pos = camera.position;
+        ref.current.position.set(pos.x, pos.y, pos.z);
+        ref.current.geometry.radius = camera.nearClippingPlane;
     });
 
     return (
