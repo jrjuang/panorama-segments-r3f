@@ -8,7 +8,7 @@ const Model = () => {
   const { scene } = useGLTF('Suzanne.glb')
   return <primitive object={scene} />
 }
-import Skybox from "/.Skybox"
+import Skybox from "./Skybox"
 const App = () => {
   return (
     <Canvas style={{ height: '100vh', width: '100vw' }}>
