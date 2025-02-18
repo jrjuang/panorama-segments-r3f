@@ -1,5 +1,6 @@
 import { extend } from "@react-three/fiber";
 import { shaderMaterial } from "@react-three/drei";
+import * as THREE from "three"
 const SkyboxMaterial = shaderMaterial(
   { time: 0 },
   `
