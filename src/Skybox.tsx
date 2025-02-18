@@ -41,7 +41,7 @@ extend({ SkyboxMaterial });
 
 import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-const Skybox = (camera) => {
+const Skybox = () => {
     const ref = useRef<THREE.Mesh>(null);
 
     useEffect(() => {
@@ -50,6 +50,7 @@ const Skybox = (camera) => {
         ref.current.material.uniforms.masks.value = loader.load("masks2_BGR.png");
     }, [ref.current]);
 
+    const { camera } = useThree();
     useFrame(({ clock }) => {
         if (!ref.current) { return; }
         const material = ref.current.material;

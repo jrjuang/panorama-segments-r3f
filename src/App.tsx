@@ -33,7 +33,7 @@ const App = () => {
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >
-      <Skybox ref={skyboxRef} camera={cameraRef.current} />
+      <Skybox ref={skyboxRef} />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <Model />
