@@ -27,7 +27,7 @@ const App = () => {
       console.log(cursorRay);
     }
     canvasRef.current.addEventListener("mouseup", mouseUp);
-    return () => canvasRef.crrent.removeEventListener("mouseup", mouseUp);
+    return () => canvasRef.current.removeEventListener("mouseup", mouseUp);
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >
