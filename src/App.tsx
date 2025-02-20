@@ -36,11 +36,11 @@ const App = () => {
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <Model />
-      <mesh>
+      <mesh position={[0, -10, 0]}>
         <boxGeometry args={[8, 8, 8]} />
         <meshStandardMaterial color="orange" side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
       </mesh>
-      <mesh scale={[16, 16, 16]} position={[0, 0, 0]}>
+      <mesh scale={[16, 16, 16]} position={[0, 10, 0]}>
         <sphereGeometry args={[1, 32, 16]} />
         <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
       </mesh>
