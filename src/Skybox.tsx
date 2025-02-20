@@ -11,31 +11,34 @@ const SkyboxMaterial = shaderMaterial(
         masks: { value: null }
     },
     `
-    varying vec3 vWorldDirection;
-    varying vec2 vUV;
+    varying vec3 linearWorldPos;
     void main() {
-      vec4 worldPosition = modelMatrix * vec4(position, 0.0);
-      vWorldDirection = normalize(worldPosition.xyz);
+      linearWorldPos = mat3(modelMatrix) * position;
       gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
-      float x = atan2(vWorldDirection.z, vWorldDirection.x);
-      x = x / 3.1415926 + 0.5;
-      float y = vWorldDirection.y * 0.5 + 0.5;
-      vUV = vec2(x, y);
     }
   `,
     `
     precision mediump float;
-    varying vec3 vWorldDirection;
-    varying vec2 vUV;
+    varying vec3 linearWorldPos;
     uniform float time;
     uniform sampler2D masks;
+    const float OVER_TWO_PI = 0.15915494309;
 
     void main() {
+      vec3 worldDirection = normalize(linearWorldPos);
+      //debug sky blue
       vec3 color = vec3(0.1, 0.3, 0.6);
-      float gradient = smoothstep(-1.0, 1.0, normalize(vWorldDirection).y);
+      float gradient = smoothstep(-1.0, 1.0, worldDirection.y);
       //gl_FragColor = vec4(mix(vec3(0.8, 0.9, 1.0), color, gradient), 1.0);
+      
+      float x = atan(worldDirection.z, worldDirection.x);
+      x += 3.1415926;
+      x *= OVER_TWO_PI;
+      float y = worldDirection.y * 0.5 + 0.5;
+      vec2 uv = vec2(x, y);
       //debug testing
-      gl_FragColor = vec4(texture2D(masks, vUV).rgb, sin(time) * 0.5 + 0.5);
+      gl_FragColor = vec4(uv, 0, , sin(time * 0.5) * 0.5 + 0.5);
+      //gl_FragColor = vec4(texture2D(masks, vUV).rgb, sin(time) * 0.5 + 0.5);
     }
   `
 );
@@ -63,7 +66,7 @@ const Skybox = () => {
 
     return (
         <mesh ref={ref} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
-            <boxGeometry/>
+            <boxGeometry />
             <skyboxMaterial side={THREE.BackSide} />
         </mesh>
     );
