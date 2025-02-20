@@ -40,7 +40,7 @@ const App = () => {
         <boxGeometry args={[8, 8, 8]} />
         <meshStandardMaterial color="orange" side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
       </mesh>
-      <mesh scale={[16, 16, 16]} position={[0, 10, 0]}>
+      <mesh scale={[1, 1, 1]} position={[0, 10, 0]}>
         <sphereGeometry args={[1, 32, 16]} />
         <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
       </mesh>
