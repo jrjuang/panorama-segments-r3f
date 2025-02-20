@@ -32,9 +32,8 @@ const SkyboxMaterial = shaderMaterial(
       //gl_FragColor = vec4(mix(vec3(0.8, 0.9, 1.0), color, gradient), 1.0);
       
       float x = atan(worldDirection.z, worldDirection.x);
-      x += 3.1415926;
-      x *= OVER_TWO_PI;
-      float y = worldDirection.y * 0.5 + 0.5;
+      x = x * OVER_TWO_PI + 0.5;
+      float y = asin(worldDirection.y) * OVER_TWO_PI * 2.0 + 0.5;
       vec2 uv = vec2(x, y);
       //debug testing
       gl_FragColor = vec4(uv, 0, sin(time * 0.5) * 0.5 + 0.5);
