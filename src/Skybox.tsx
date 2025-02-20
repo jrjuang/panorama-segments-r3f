@@ -11,26 +11,28 @@ const SkyboxMaterial = shaderMaterial(
         masks: { value: null }
     },
     `
-    varying vec3 vWorldPosition;
+    varying vec3 vWorldDirection;
     varying vec2 vUV;
     void main() {
-      vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-      vWorldPosition = worldPosition.xyz;
+      vec4 worldPosition = modelMatrix * vec4(position, 0.0);
+      vWorldDirection = normalize(worldPosition.xyz);
       gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
-      vUV = uv;
-      vUV.x = -vUV.x + 1.0;
+      float x = atan2(vWorldDirection.z, vWorldDirection.x);
+      x = x / 3.1415926 + 0.5;
+      float y = vWorldDirection.y * 0.5 + 0.5;
+      vUV = vec2(x, y);
     }
   `,
     `
     precision mediump float;
-    varying vec3 vWorldPosition;
+    varying vec3 vWorldDirection;
     varying vec2 vUV;
     uniform float time;
     uniform sampler2D masks;
 
     void main() {
       vec3 color = vec3(0.1, 0.3, 0.6);
-      float gradient = smoothstep(-1.0, 1.0, normalize(vWorldPosition).y);
+      float gradient = smoothstep(-1.0, 1.0, normalize(vWorldDirection).y);
       //gl_FragColor = vec4(mix(vec3(0.8, 0.9, 1.0), color, gradient), 1.0);
       //debug testing
       gl_FragColor = vec4(texture2D(masks, vUV).rgb, sin(time) * 0.5 + 0.5);
@@ -61,7 +63,7 @@ const Skybox = () => {
 
     return (
         <mesh ref={ref} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
-            <sphereGeometry args={[1, 32, 16]} />
+            <boxGeometry/>
             <skyboxMaterial side={THREE.BackSide} />
         </mesh>
     );
