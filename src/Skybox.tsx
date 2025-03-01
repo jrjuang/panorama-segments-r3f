@@ -43,7 +43,7 @@ const SkyboxMaterial = shaderMaterial(
 );
 extend({ SkyboxMaterial });
 
-const Skybox = () => {
+const Skybox = ({pointer}) => {
     const ref = useRef<THREE.Mesh>(null);
 
     useEffect(() => {
@@ -54,6 +54,9 @@ const Skybox = () => {
 
     const { camera } = useThree();
     useFrame(({ clock }) => {
+        //debug
+        console.log(`Pointer: ${pointer.direction.x}, ${pointer.direction.y}, ${pointer.direction.z}`);
+
         if (!ref.current) { return; }
         const material = ref.current.material;
         material.uniforms.time.value = clock.getElapsedTime();
