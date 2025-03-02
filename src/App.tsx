@@ -8,7 +8,7 @@ const Model = () => {
   const { scene } = useGLTF('Suzanne.glb')
   return <primitive object={scene} />
 }
-import Skybox from "./Skybox"
+import EnvironmentMasks from "./EnvironmentMasks"
 const App = () => {
   const canvasRef = useRef(null);
   const cameraRef = useRef<THREE.PerpectiveCamera | null>(null);
@@ -31,7 +31,7 @@ const App = () => {
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >
-      <Skybox pointer={cursorRay}/>
+      <EnvironmentMasks pointer={cursorRay}/>
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <Environment files="studio_small_09_4k.exr" background />
