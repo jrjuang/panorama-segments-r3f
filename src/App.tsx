@@ -24,10 +24,6 @@ const App = () => {
       cursorDir.normalize();
       cursorRay.origin = camera.position;
       cursorRay.direction = cursorDir;
-      //debug
-      console.log(event);
-      console.log(camera.matrixWorldInverse)
-      console.log(cursorRay);
     }
     const c = canvasRef.current;
     c.addEventListener("mousemove", mouseMove);
@@ -38,15 +34,6 @@ const App = () => {
       <Skybox pointer={cursorRay}/>
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
-      <Model />
-      <mesh position={[0, -8, 0]}>
-        <boxGeometry args={[8, 8, 8]} />
-        <meshStandardMaterial color="orange" side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
-      </mesh>
-      <mesh scale={[1, 1, 1]} position={[0, 2, 0]}>
-        <sphereGeometry args={[1, 32, 16]} />
-        <meshStandardMaterial side={THREE.DoubleSide} args={[{ metalness: 1, roughness: 0 }]} />
-      </mesh>
       <Environment files="studio_small_09_4k.exr" background />
       <OrbitControls />
     </Canvas>
