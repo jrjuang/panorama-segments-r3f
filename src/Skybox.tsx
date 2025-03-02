@@ -40,7 +40,7 @@ const SkyboxMaterial = shaderMaterial(
       vec2 uv_masks = sphereUV(worldDirection);
       vec4 selection = texture2D(masks, uv);
       vec4 masks = texture2D(masks, uv_masks);
-      gl_FragColor = selection.rgb == masks.rgb ? vec4(selection.rgb, sin(time * 4.0) * 0.5 + 0.5) : vec4(0.0);
+      gl_FragColor = selection.rgb == masks.rgb ? vec4(selection.rgb, sin(time * 3.3) * 0.5 + 0.5) : vec4(0.0);
     }
   `
 );
