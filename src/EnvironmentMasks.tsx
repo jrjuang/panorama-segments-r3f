@@ -46,7 +46,7 @@ const SkyboxMaterial = shaderMaterial(
 );
 extend({ SkyboxMaterial });
 
-const EnvironmentMasks = ({ pointer }) => {
+const EnvironmentMasks = ({ pointer }: {pointer: { origin: THREE.Vector3, direction: THREE.Vector3}}) => {
   const ref = useRef<THREE.Mesh>(null);
 
   useEffect(() => {

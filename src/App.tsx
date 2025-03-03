@@ -3,14 +3,16 @@ import { useRef, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+import EnvironmentMasks from "./EnvironmentMasks"
+import FovControls from "./FovControls"
 
 const Model = () => {
   const { scene } = useGLTF('Suzanne.glb')
   return <primitive object={scene} />
 }
-import EnvironmentMasks from "./EnvironmentMasks"
+
 const App = () => {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const cameraRef = useRef<THREE.PerpectiveCamera | null>(null);
   // Get the mouse cursor position
   const cursorRay = { origin: new THREE.Vector3(), direction: new THREE.Vector3(1, 0, 0) };
@@ -31,11 +33,12 @@ const App = () => {
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, -1.5, 4] }} onCreated={({ camera }) => cameraRef.current = camera} >
+      <Environment files="studio_small_09_4k.exr" background />
       <EnvironmentMasks pointer={cursorRay}/>
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
-      <Environment files="studio_small_09_4k.exr" background />
       <OrbitControls />
+      <FovControls />
     </Canvas>
   )
 }
