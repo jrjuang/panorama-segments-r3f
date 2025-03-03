@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import { useTree } from "@react-three/dre";
+import { useThree } from "@react-three/fiber";
 function FovControls() {
-    const { camera, gl } = useTree();
+    const { camera, gl } = useThree();
     useEffect(() => {
         function handler(event: WheelEvent) {
-            camera.fov = Math.max(15, Math.max(camera.fov * (1.0 + event.deltaY * 0.05), 90));
+            camera.fov = Math.max(15, Math.min(camera.fov * (1.0 + event.deltaY * 0.005), 90));
+            camera.updateProjectionMatrix();
         }
-        gl.domElement.addEventListner("wheel", handler);
+        gl.domElement.addEventListener("wheel", handler);
         return () => {
             gl.domElement.removeEventListener("wheel", handler);
         };
