@@ -4,7 +4,7 @@ function FovControls() {
     const { camera, gl } = useThree();
     useEffect(() => {
         function handler(event: WheelEvent) {
-            camera.fov = Math.max(15, Math.min(camera.fov * (1.0 + event.deltaY * 0.005), 90));
+            camera.fov = Math.max(15, Math.min(camera.fov * (1.0 + event.deltaY * 0.001), 120));
             camera.updateProjectionMatrix();
         }
         gl.domElement.addEventListener("wheel", handler);
