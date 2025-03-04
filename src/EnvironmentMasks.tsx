@@ -40,13 +40,24 @@ const SkyboxMaterial = shaderMaterial(
       vec2 uv_masks = sphereUV(worldDirection);
       vec4 selection = texture2D(masks, uv);
       vec4 masks = texture2D(masks, uv_masks);
-      gl_FragColor = selection.rgb == masks.rgb ? vec4(selection.rgb, sin(time * 3.3) * 0.5 + 0.5) : vec4(0.0);
+      if (selection.rgb === masks.rgb) {
+        discard;
+      }
+      // Outline FX
+      for (int i = -1; i < 2; i += 2) {
+        for (int j = -1; j < 2; j += 2) {
+          vec4 masks = texture2D(masks, uv_masks + vec2(i, j));
+          if (selection.rgb != masks.rgb) { continue; }
+          gl_FragColor = vec4(selection.rgb, (sin(time * 3.3) * 0.35 + 0.35) / (float)(abs(i) + abs(j)));
+          return;
+        }
+      }
     }
   `
 );
 extend({ SkyboxMaterial });
 
-const EnvironmentMasks = ({ pointer }: {pointer: { origin: THREE.Vector3, direction: THREE.Vector3}}) => {
+const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: THREE.Vector3 } }) => {
   const ref = useRef<THREE.Mesh>(null);
 
   useEffect(() => {
