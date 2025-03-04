@@ -53,7 +53,7 @@ const SkyboxMaterial = shaderMaterial(
         for (int j = -1; j < 2; ++j) {
           vec4 mask = texture2D(masks, uv_masks + vec2(i, j) * 0.0025);
           if (selection.rgb != mask.rgb) { continue; }
-          gl_FragColor = vec4(selection.rgb, flicker / (float)(1.0 + abs(i) + abs(j)));
+          gl_FragColor = vec4(selection.rgb, flicker / (float)( 1.0 + float(abs(i)) + float(abs(j))));
           return;
         }
       }
