@@ -44,19 +44,18 @@ const SkyboxMaterial = shaderMaterial(
       if (0.0 == selection.a) {
         discard;
       }
+      float fade = 0.333;
       if (selection.rgb == mask.rgb) {
-          gl_FragColor = vec4(selection.rgb, flicker * 0.25);
+          gl_FragColor = vec4(selection.rgb, flicker * fade);
           return;
       }
       // Outline FX
+      gl_FragColor = vec4(0.0);
       for (int i = -1; i < 2; i += 2) {
         for (int j = -1; j < 2; j += 2) {
           vec4 mask = texture2D(masks, uv_masks + vec2(i, j) * 0.0025);
           if (selection.rgb != mask.rgb) { continue; }
-          float fade = 1.0 / float(abs(i) + abs(j));
-          fade *= fade;
-          gl_FragColor = vec4(selection.rgb, flicker * fade);
-          return;
+          gl_FragColor += vec4(selection.rgb, flicker * fade);
         }
       }
     }
