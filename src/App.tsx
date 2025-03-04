@@ -36,7 +36,7 @@ const App = () => {
       <EnvironmentMasks pointer={cursorRay}/>
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
-      <OrbitControls />
+      <OrbitControls rotateSpeed={-0.2}/>
       <FovControls />
     </Canvas>
   )
