@@ -1,4 +1,4 @@
-This is an experimental Three.js lab built on RF3. It enables hoverable objects in a panorama by utilizing segmentation results from Meta's Segment Anything Model (SAM) https://github.com/facebookresearch/segment-anything.
+This is an experimental Three.js lab built on R3F. It enables hoverable objects in a panorama by utilizing segmentation results from Meta's Segment Anything Model (SAM) https://github.com/facebookresearch/segment-anything.
 
 ## Installation (Windows CMD)
 ```bash
