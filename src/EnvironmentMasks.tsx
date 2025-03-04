@@ -41,7 +41,10 @@ const SkyboxMaterial = shaderMaterial(
       vec4 selection = texture2D(masks, uv);
       vec4 mask = texture2D(masks, uv_masks);
       float flicker = sin(time * 3.3) * 0.35 + 0.35;
-      if (selection.rgb == masks.rgb) {
+      if (0.0 == selection.a) {
+        discard;
+      }
+      if (selection.rgb == mask.rgb) {
           gl_FragColor = vec4(selection.rgb, flicker * 0.25);
           return;
       }
