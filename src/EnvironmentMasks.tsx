@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { extend, useFrame, useThree } from "@react-three/fiber";
-import { shaderMaterial } from "@react-three/drei";
+import { shaderMaterial, Environment } from "@react-three/drei";
 import * as THREE from "three"
 const SkyboxMaterial = shaderMaterial(
   {
@@ -69,6 +69,7 @@ const EnvironmentMasks = ({ pointer }: {pointer: { origin: THREE.Vector3, direct
 
   return (
     <mesh ref={ref} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
+      <Environment files="studio_small_09_4k.exr" background />
       <boxGeometry />
       <skyboxMaterial side={THREE.BackSide} />
     </mesh>
