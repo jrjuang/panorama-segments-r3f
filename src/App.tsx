@@ -32,7 +32,7 @@ const App = () => {
     return () => c.removeEventListener("mousemove", mouseMove);
   }, []);
   return (
-    <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, 0, -1] }} onCreated={({ camera }) => cameraRef.current = camera} >
+    <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, 0, -1], fov: 90 }} onCreated={({ camera }) => cameraRef.current = camera} >
       <EnvironmentMasks pointer={cursorRay}/>
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
