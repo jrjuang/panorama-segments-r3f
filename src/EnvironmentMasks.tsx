@@ -64,39 +64,36 @@ const SkyboxMaterial = shaderMaterial(
 extend({ SkyboxMaterial });
 
 const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: THREE.Vector3 } }) => {
-  const textureLoader = new THREE.TextureLoader();
-  const [exrPath, setExrPath] = useState<string>("studio.exr");
-  const boxRef = useRef<THREE.Mesh>(null);
+
   const masksPathOfExr: Map<string, string> = new Map();
   masksPathOfExr.set("studio.exr", "masks2_studio.png");
   masksPathOfExr.set("brown.exr", "masks2_brown.png");
   masksPathOfExr.set("bathroom.exr", "masks2_bathroom.png");
 
+  const textureLoader = new THREE.TextureLoader();
   function changeMasks(boxRef: React.RefObject<THREE.Mesh>, masksPath: string) {
     if (boxRef.current) {
       boxRef.current.material.uniforms.masks.value = textureLoader.load(masksPath);
     }
   }
 
-  // Initialization
+  const boxRef = useRef<THREE.Mesh>(null);
+  const [exrPath, setExrPath] = useState<string>("studio.exr");
+
   useEffect(() => {
-    setExrPath((prev: string) => "studio.exr");
-    changeMasks(boxRef, masksPathOfExr["studio.exr"]);
-  }, [boxRef.current]);
+    changeMasks(boxRef, masksPathOfExr[exrPath]);
+  }, [boxRef.current, exrPath]);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if (event.key === "F2") {
         setExrPath((prev: string) => {
           if (prev === "studio.exr") {
-            changeMasks(boxRef, masksPathOfExr.get("brown.exr"));
             return "brown.exr";
           }
           if (prev === "brown.exr") {
-            changeMasks(boxRef, masksPathOfExr.get("bathroom.exr"));
             return "bathroom.exr";
           }
-          changeMasks(boxRef, masksPathOfExr.get("studio.exr"));
           return "studio.exr";
         });
       }
@@ -119,7 +116,7 @@ const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direc
 
   return (
     <mesh ref={boxRef} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
-      <Environment file={exrPath} background />
+      <Environment files={exrPath} background />
       <boxGeometry />
       <skyboxMaterial side={THREE.BackSide} />
     </mesh>
