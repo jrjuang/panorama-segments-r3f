@@ -1,7 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { extend, useFrame, useThree } from "@react-three/fiber";
-import { shaderMaterial, Environment, useLoader } from "@react-three/drei";
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader"
+import { shaderMaterial, Environment } from "@react-three/drei";
 import * as THREE from "three"
 const SkyboxMaterial = shaderMaterial(
   {
@@ -67,38 +66,38 @@ extend({ SkyboxMaterial });
 const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: THREE.Vector3 } }) => {
   const textureLoader = new THREE.TextureLoader();
   const [exrPath, setExrPath] = useState<string>("studio.exr");
-  const panorama = useLoader(RGBELoader, exrPath);
   const boxRef = useRef<THREE.Mesh>(null);
+  const masksPathOfExr: Map<string, string> = new Map();
+  masksPathOfExr.set("studio.exr", "masks2_studio.png");
+  masksPathOfExr.set("brown.exr", "masks2_brown.png");
+  masksPathOfExr.set("bathroom.exr", "masks2_bathroom.png");
+
   function changeMasks(boxRef: React.RefObject<THREE.Mesh>, masksPath: string) {
     if (boxRef.current) {
-      boxRef.current.material.uniforms.masks.value = textureLoader.load("masksPath");
+      boxRef.current.material.uniforms.masks.value = textureLoader.load(masksPath);
     }
   }
-  
+
   // Initialization
   useEffect(() => {
-    setExrPath((prev: string) => "masks_studio.png");
-    changeMasks(boxRef, "masks_studio.png");
+    setExrPath((prev: string) => "studio.exr");
+    changeMasks(boxRef, masksPathOfExr["studio.exr"]);
   }, [boxRef.current]);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
-      if (event.key === "F3") {
+      if (event.key === "F2") {
         setExrPath((prev: string) => {
-          if (prev === "/studio.exr") {
-            changeMasks(boxRef, "masks_studio.png");
-            return "/brown.exr";
+          if (prev === "studio.exr") {
+            changeMasks(boxRef, masksPathOfExr.get("brown.exr"));
+            return "brown.exr";
           }
-          if (prev === "/brown.exr") {
-            changeMasks(boxRef, "masks_brown.png");
-            return "/bathroom.exr";
+          if (prev === "brown.exr") {
+            changeMasks(boxRef, masksPathOfExr.get("bathroom.exr"));
+            return "bathroom.exr";
           }
-          if (prev === "/bathroom.exr") {
-            changeMasks(boxRef, "masks_bathroom.png");
-            return "/studio.exr";
-          }
-          changeMasks(boxRef, "masks_studio.png");
-          return "/studio.exr";
+          changeMasks(boxRef, masksPathOfExr.get("studio.exr"));
+          return "studio.exr";
         });
       }
     };
@@ -120,7 +119,7 @@ const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direc
 
   return (
     <mesh ref={boxRef} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
-      <Environment map={panorama} background />
+      <Environment file={exrPath} background />
       <boxGeometry />
       <skyboxMaterial side={THREE.BackSide} />
     </mesh>
