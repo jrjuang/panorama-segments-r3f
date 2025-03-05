@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { extend, useFrame, useThree } from "@react-three/fiber";
-import { shaderMaterial, Environment } from "@react-three/drei";
+import { shaderMaterial, Environment, useLoader } from "@react-three/drei";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader"
 import * as THREE from "three"
 const SkyboxMaterial = shaderMaterial(
   {
@@ -64,29 +65,62 @@ const SkyboxMaterial = shaderMaterial(
 extend({ SkyboxMaterial });
 
 const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: THREE.Vector3 } }) => {
-  const ref = useRef<THREE.Mesh>(null);
+  const textureLoader = new THREE.TextureLoader();
+  const [exrPath, setExrPath] = useState<string>("studio.exr");
+  const panorama = useLoader(RGBELoader, exrPath);
+  const boxRef = useRef<THREE.Mesh>(null);
+  function changeMasks(boxRef: React.RefObject<THREE.Mesh>, masksPath: string) {
+    if (boxRef.current) {
+      boxRef.current.material.uniforms.masks.value = textureLoader.load("masksPath");
+    }
+  }
+  
+  // Initialization
+  useEffect(() => {
+    setExrPath((prev: string) => "masks_studio.png");
+    changeMasks(boxRef, "masks_studio.png");
+  }, [boxRef.current]);
 
   useEffect(() => {
-    const loader = new THREE.TextureLoader();
-    if (!ref.current) { return; }
-    ref.current.material.uniforms.masks.value = loader.load("masks2.png");
-  }, [ref.current]);
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "F3") {
+        setExrPath((prev: string) => {
+          if (prev === "/studio.exr") {
+            changeMasks(boxRef, "masks_studio.png");
+            return "/brown.exr";
+          }
+          if (prev === "/brown.exr") {
+            changeMasks(boxRef, "masks_brown.png");
+            return "/bathroom.exr";
+          }
+          if (prev === "/bathroom.exr") {
+            changeMasks(boxRef, "masks_bathroom.png");
+            return "/studio.exr";
+          }
+          changeMasks(boxRef, "masks_studio.png");
+          return "/studio.exr";
+        });
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   const { camera } = useThree();
   useFrame(({ clock }) => {
-    if (!ref.current) { return; }
-    const material = ref.current.material;
+    if (!boxRef.current) { return; }
+    const material = boxRef.current.material;
     material.uniforms.time.value = clock.getElapsedTime();
     material.uniforms.pointer.value = pointer.direction;
     const pos = camera.position;
-    ref.current.position.set(pos.x, pos.y, pos.z);
+    boxRef.current.position.set(pos.x, pos.y, pos.z);
     const r = 0.5 * (camera.near + camera.far)
-    ref.current.scale.set(r, r, r);
+    boxRef.current.scale.set(r, r, r);
   });
 
   return (
-    <mesh ref={ref} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
-      <Environment files="studio_small_09_4k.exr" background />
+    <mesh ref={boxRef} scale={[0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far), 0.5 * (camera.near + camera.far)]}>
+      <Environment map={panorama} background />
       <boxGeometry />
       <skyboxMaterial side={THREE.BackSide} />
     </mesh>
