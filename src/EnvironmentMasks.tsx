@@ -81,7 +81,7 @@ const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direc
   const [exrPath, setExrPath] = useState<string>("studio.exr");
 
   useEffect(() => {
-    changeMasks(boxRef, masksPathOfExr[exrPath]);
+    changeMasks(boxRef, masksPathOfExr.get(exrPath));
   }, [boxRef.current, exrPath]);
 
   useEffect(() => {
