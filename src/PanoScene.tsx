@@ -129,7 +129,11 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
     material.uniforms.time.value = clock.getElapsedTime();
 
     const [u, v]: [number, number] = sphereUV(pointer);
-    const pixel: Uint8ClampedArray = masks.getImageData(u, v, 1, 1).data;
+    const width: number = masks.canvas.width;
+    const height: number = masks.canvas.height;
+    const x: number = Math.floor(u / width);
+    const y: number = Math.floor(v / height);
+    const pixel: Uint8ClampedArray = masks.getImageData(x, y, 1, 1).data;
     //debug
     console.log(`selection mask: ${pixel}`);
 
@@ -144,7 +148,7 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
     const pos = camera.position;
     boxRef.current.position.set(pos.x, pos.y, pos.z);
     const radius: number = 0.5 * (camera.near + camera.far)
-    boxRef.current.scale.set(r, r, r);
+    boxRef.current.scale.set(radius, radius, radius);
   });
 
   return (
