@@ -3,7 +3,7 @@ import { useRef, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
-import EnvironmentMasks from "./EnvironmentMasks"
+import PanoScene from "./PanoScene.tsx"
 import FovControls from "./FovControls"
 
 const Model = () => {
