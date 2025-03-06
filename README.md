@@ -2,8 +2,8 @@ This is an experimental Three.js lab built on R3F. It enables hoverable objects 
 
 ## Installation (Windows CMD)  
 ```bash
-gh repo clone jrjuang/threejs-lab-hello-3d
-cd threejs-lab-hello-3d
+gh repo clone jrjuang/panorama-segments-r3f
+cd panorama-segments-r3f
 npm install
 npm run dev
 ```
@@ -11,3 +11,4 @@ npm run dev
 ## Usage  
 - **F2 Key**: Change the room.
 - First-time loading may be slow; please wait about 5 seconds.
+
