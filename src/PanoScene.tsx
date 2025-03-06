@@ -89,7 +89,7 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
     });
   }
 
-  const float OVER_TWO_PI: number = 0.15915494309;
+  const OVER_TWO_PI: number = 0.5 / Math.PI;
   const sphereUV(direction: THREE.Vector3): [number, number] => {
     let x: number = Math.atan2(direction.z, direction.x);
     x = x * OVER_TWO_PI + 0.5;
