@@ -9,4 +9,5 @@ npm run dev
 ```
 
 ## Usage  
-- **F2 Key**: Change the room.  
+- **F2 Key**: Change the room.
+- First-time loading may be slow; please wait about 5 seconds.
