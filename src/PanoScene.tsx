@@ -9,7 +9,8 @@ const SkyboxMaterial = shaderMaterial(
     depthWrite: false,
     blending: THREE.NormalBlending,
     masks: { value: null },
-    selectionMask: new THREE.Vector4()
+    selectionMask: new THREE.Vector4(),
+    pointer: new THREE.Vector3()
   },
   `
     varying vec3 linearWorldPos;
@@ -33,18 +34,20 @@ const SkyboxMaterial = shaderMaterial(
     uniform float time;
     uniform sampler2D masks;
     uniform vec4 selectionMask;
+    uniform vec3 pointer;
 
     void main() {
       vec3 worldDirection = normalize(linearWorldPos);
       vec2 uv_masks = sphereUV(worldDirection);
       vec4 mask = texture2D(masks, uv_masks);
+      vec4 selection = texture2D(masks, sphereUV(pointer));
       float flicker = sin(time * 3.3) * 0.35 + 0.35;
-      if (0 == selectionMask.a) {
+      if (0 == selection.a) {
         discard;
       }
       float fade = 0.333;
-      if (selectionMask.rgb == mask.rgb) {
-          gl_FragColor = vec4(selectionMask.rgb / 255.0, flicker * fade);
+      if (selection.rgb == mask.rgb) {
+          gl_FragColor = vec4(selection.rgb, flicker * fade);
           return;
       }
       // Outline FX
@@ -52,8 +55,8 @@ const SkyboxMaterial = shaderMaterial(
       for (int i = -1; i < 2; i += 2) {
         for (int j = -1; j < 2; j += 2) {
           vec4 mask = texture2D(masks, uv_masks + vec2(i, j) * 0.0025);
-          if (selectionMask.rgb != mask.rgb) { continue; }
-          gl_FragColor += vec4(selectionMask.rgb / 255.0, flicker);
+          if (selection.rgb != mask.rgb) { continue; }
+          gl_FragColor += vec4(selection.rgb, flicker);
         }
       }
     }
@@ -138,8 +141,10 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
       const g: number = pixel[1];
       const b: number = pixel[2];
       const a: number = pixel[3];
-      material.uniforms.selectionMask.value.set(r, g, b, a);
+      material.uniforms.selectionMask.value.set(r, g, b, a); // Not work in shader due to Three.js does not support [0, 255] sampler2D
     }
+    // For hover FX
+    material.uniforms.pointer.value.set(pointer.direction.x, pointer.direction.y, pointer.direction.z);
 
     const pos = camera.position;
     boxRef.current.position.set(pos.x, pos.y, pos.z);
