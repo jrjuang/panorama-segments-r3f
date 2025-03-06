@@ -8,7 +8,6 @@ const SkyboxMaterial = shaderMaterial(
     transparent: true,
     depthWrite: false,
     blending: THREE.NormalBlending,
-    pointer: { value: new THREE.Vector3() },
     masks: { value: null },
     selectionMask: { value: new THREE.Vector4() }
   },
@@ -33,22 +32,19 @@ const SkyboxMaterial = shaderMaterial(
     varying vec3 linearWorldPos;
     uniform float time;
     uniform sampler2D masks;
-    uniform vec3 pointer;
     uniform vec4 selectionMask;
 
     void main() {
       vec3 worldDirection = normalize(linearWorldPos);
-      vec2 uv = sphereUV(pointer);
       vec2 uv_masks = sphereUV(worldDirection);
-      vec4 selection = texture2D(masks, uv);
       vec4 mask = texture2D(masks, uv_masks);
       float flicker = sin(time * 3.3) * 0.35 + 0.35;
-      if (0.0 == selection.a) {
+      if (0.0 == selectionMask.a) {
         discard;
       }
       float fade = 0.333;
-      if (selection.rgb == mask.rgb) {
-          gl_FragColor = vec4(selection.rgb, flicker * fade);
+      if (selectionMask.rgb == mask.rgb) {
+          gl_FragColor = vec4(selectionMask.rgb, flicker * fade);
           return;
       }
       // Outline FX
@@ -56,8 +52,8 @@ const SkyboxMaterial = shaderMaterial(
       for (int i = -1; i < 2; i += 2) {
         for (int j = -1; j < 2; j += 2) {
           vec4 mask = texture2D(masks, uv_masks + vec2(i, j) * 0.0025);
-          if (selection.rgb != mask.rgb) { continue; }
-          gl_FragColor += vec4(selection.rgb, flicker);
+          if (selectionMask.rgb != mask.rgb) { continue; }
+          gl_FragColor += vec4(selectionMask.rgb, flicker);
         }
       }
     }
@@ -101,7 +97,7 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
   const [exrPath, setExrPath] = useState<string>("studio.exr");
 
   useEffect(() => {
-    changeMasks(boxRef, masksPathOfExr.get(exrPath));
+    changeMasks(boxRef, String(masksPathOfExr.get(exrPath)));
   }, [boxRef.current, exrPath]);
 
   useEffect(() => {
@@ -129,14 +125,14 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
     material.uniforms.time.value = clock.getElapsedTime();
 
     if (masks) {
-      const [u, v]: [number, number] = sphereUV(pointer);
+      const [u, v]: [number, number] = sphereUV(pointer.direction);
       const width: number = masks.canvas.width;
       const height: number = masks.canvas.height;
-      const x: number = Math.floor(u / width);
-      const y: number = Math.floor(v / height);
+      const x: number = Math.floor(u * width);
+      const y: number = Math.floor((1 - v) * height);
       const pixel: Uint8ClampedArray = masks.getImageData(x, y, 1, 1).data;
-      //debug
-      console.log(`selection mask: ${pixel}`);
+      
+      console.log(`uv: ${u}, ${v}; pixel position: ${x}, ${y}; selection mask: ${pixel}`);
 
       const r: number = pixel[0];
       const g: number = pixel[1];
@@ -144,8 +140,6 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
       const a: number = pixel[3];
       material.uniforms.selectionMask.value = new THREE.Vector4(r, g, b, a);
     }
-    //debug obsolete
-    material.uniforms.pointer.value = pointer.direction;
 
     const pos = camera.position;
     boxRef.current.position.set(pos.x, pos.y, pos.z);
