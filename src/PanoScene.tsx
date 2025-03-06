@@ -130,6 +130,9 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
 
     const [u, v]: [number, number] = sphereUV(pointer);
     const pixel: Uint8ClampedArray = masks.getImageData(u, v, 1, 1).data;
+    //debug
+    console.log(`selection mask: ${pixel}`);
+
     const r: number = pixel[0];
     const g: number = pixel[1];
     const b: number = pixel[2];
