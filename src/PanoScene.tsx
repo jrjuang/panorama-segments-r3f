@@ -134,14 +134,14 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
       const x: number = Math.floor(u * width);
       const y: number = Math.floor((1 - v) * height);
       const pixel: Uint8ClampedArray = masks.getImageData(x, y, 1, 1).data;
-      
+      // Used as an ID lable
       console.log(`uv: ${u}, ${v}; pixel position: ${x}, ${y}; selection mask: ${pixel}`);
 
       const r: number = pixel[0];
       const g: number = pixel[1];
       const b: number = pixel[2];
       const a: number = pixel[3];
-      material.uniforms.selectionMask.value.set(r, g, b, a); // Not work in shader due to Three.js does not support [0, 255] sampler2D
+      material.uniforms.selectionMask.value.set(r, g, b, a); // Not work as FX mask in shader due to Three.js does not support [0, 255] sampler2D
     }
     // For hover FX
     material.uniforms.pointer.value.set(pointer.direction.x, pointer.direction.y, pointer.direction.z);
