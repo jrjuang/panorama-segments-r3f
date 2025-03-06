@@ -9,7 +9,7 @@ const SkyboxMaterial = shaderMaterial(
     depthWrite: false,
     blending: THREE.NormalBlending,
     masks: { value: null },
-    selectionMask: { value: new THREE.Vector4() }
+    selectionMask: new THREE.Vector4()
   },
   `
     varying vec3 linearWorldPos;
@@ -138,7 +138,7 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
       const g: number = pixel[1];
       const b: number = pixel[2];
       const a: number = pixel[3];
-      material.uniforms.selectionMask.value = new THREE.Vector4(r, g, b, a);
+      material.uniforms.selectionMask.value.set(r, g, b, a);
     }
 
     const pos = camera.position;
