@@ -9,7 +9,8 @@ const SkyboxMaterial = shaderMaterial(
     depthWrite: false,
     blending: THREE.NormalBlending,
     pointer: { value: new THREE.Vector3() },
-    masks: { value: null }
+    masks: { value: null },
+    selectionMask: { value: new THREE.Vector4() }
   },
   `
     varying vec3 linearWorldPos;
@@ -33,6 +34,7 @@ const SkyboxMaterial = shaderMaterial(
     uniform float time;
     uniform sampler2D masks;
     uniform vec3 pointer;
+    uniform vec4 selectionMask;
 
     void main() {
       vec3 worldDirection = normalize(linearWorldPos);
@@ -64,6 +66,7 @@ const SkyboxMaterial = shaderMaterial(
 extend({ SkyboxMaterial });
 
 const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: THREE.Vector3 } }) => {
+  const [masks, setMasks] = useState<CanvasRenderingContext2D | null>(null);
 
   const masksPathOfExr: Map<string, string> = new Map();
   masksPathOfExr.set("studio.exr", "masks2_studio.png");
@@ -72,9 +75,26 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
 
   const textureLoader = new THREE.TextureLoader();
   function changeMasks(boxRef: React.RefObject<THREE.Mesh>, masksPath: string) {
-    if (boxRef.current) {
-      boxRef.current.material.uniforms.masks.value = textureLoader.load(masksPath);
-    }
+    textureLoader.load(masksPath, (masks: THREE.Texture) => {
+      if (boxRef.current) {
+        boxRef.current.material.uniforms.masks.value = masks;
+      }
+      const tempCanvas = document.createElement("canvas");
+      const img_masks = masks.image;
+      tempCanvas.width = img_masks.width;
+      tempCanvas.height = img_masks.height;
+      const context = tempCanvas.getContext("2d");
+      context?.drawImage(img_masks, 0, 0);
+      setMasks(context);
+    });
+  }
+
+  const float OVER_TWO_PI: number = 0.15915494309;
+  const sphereUV(direction: THREE.Vector3): [number, number] => {
+    let x: number = Math.atan2(direction.z, direction.x);
+    x = x * OVER_TWO_PI + 0.5;
+    const y: number = Math.asin(direction.y) * OVER_TWO_PI * 2.0 + 0.5;
+    return [x, y];
   }
 
   const boxRef = useRef<THREE.Mesh>(null);
@@ -107,10 +127,20 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
     if (!boxRef.current) { return; }
     const material = boxRef.current.material;
     material.uniforms.time.value = clock.getElapsedTime();
+
+    const [u, v]: [number, number] = sphereUV(pointer);
+    const pixel: Uint8ClampedArray = masks.getImageData(u, v, 1, 1).data;
+    const r: number = pixel[0];
+    const g: number = pixel[1];
+    const b: number = pixel[2];
+    const a: number = pixel[3];
+    material.uniforms.selectionMask.value = new THREE.Vector4(r, g, b, a);
+    //debug obsolete
     material.uniforms.pointer.value = pointer.direction;
+
     const pos = camera.position;
     boxRef.current.position.set(pos.x, pos.y, pos.z);
-    const r = 0.5 * (camera.near + camera.far)
+    const radius: number = 0.5 * (camera.near + camera.far)
     boxRef.current.scale.set(r, r, r);
   });
 
