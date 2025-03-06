@@ -42,7 +42,7 @@ const SkyboxMaterial = shaderMaterial(
       vec4 mask = texture2D(masks, uv_masks);
       vec4 selection = texture2D(masks, sphereUV(pointer));
       float flicker = sin(time * 3.3) * 0.35 + 0.35;
-      if (0 == selection.a) {
+      if (0.0 == selection.a) {
         discard;
       }
       float fade = 0.333;
