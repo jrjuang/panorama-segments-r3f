@@ -33,7 +33,7 @@ const App = () => {
   }, []);
   return (
     <Canvas ref={canvasRef} style={{ height: '100vh', width: '100vw' }} camera={{ position: [0, 0, -1], fov: 90 }} onCreated={({ camera }) => cameraRef.current = camera} >
-      <EnvironmentMasks pointer={cursorRay}/>
+      <PanoScene pointer={cursorRay}/>
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
       <OrbitControls rotateSpeed={-0.2}/>

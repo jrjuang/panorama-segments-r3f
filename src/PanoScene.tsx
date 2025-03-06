@@ -63,7 +63,7 @@ const SkyboxMaterial = shaderMaterial(
 );
 extend({ SkyboxMaterial });
 
-const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: THREE.Vector3 } }) => {
+const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: THREE.Vector3 } }) => {
 
   const masksPathOfExr: Map<string, string> = new Map();
   masksPathOfExr.set("studio.exr", "masks2_studio.png");
@@ -123,4 +123,4 @@ const EnvironmentMasks = ({ pointer }: { pointer: { origin: THREE.Vector3, direc
   );
 };
 
-export default EnvironmentMasks;
+export default PanoScene;
