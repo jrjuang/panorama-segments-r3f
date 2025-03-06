@@ -90,7 +90,7 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
   }
 
   const OVER_TWO_PI: number = 0.5 / Math.PI;
-  const sphereUV = (direction: THREE.Vector3) : [number, number] => {
+  const sphereUV = (direction: THREE.Vector3): [number, number] => {
     let x: number = Math.atan2(direction.z, direction.x);
     x = x * OVER_TWO_PI + 0.5;
     const y: number = Math.asin(direction.y) * OVER_TWO_PI * 2.0 + 0.5;
@@ -128,20 +128,22 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
     const material = boxRef.current.material;
     material.uniforms.time.value = clock.getElapsedTime();
 
-    const [u, v]: [number, number] = sphereUV(pointer);
-    const width: number = masks.canvas.width;
-    const height: number = masks.canvas.height;
-    const x: number = Math.floor(u / width);
-    const y: number = Math.floor(v / height);
-    const pixel: Uint8ClampedArray = masks.getImageData(x, y, 1, 1).data;
-    //debug
-    console.log(`selection mask: ${pixel}`);
+    if (masks) {
+      const [u, v]: [number, number] = sphereUV(pointer);
+      const width: number = masks.canvas.width;
+      const height: number = masks.canvas.height;
+      const x: number = Math.floor(u / width);
+      const y: number = Math.floor(v / height);
+      const pixel: Uint8ClampedArray = masks.getImageData(x, y, 1, 1).data;
+      //debug
+      console.log(`selection mask: ${pixel}`);
 
-    const r: number = pixel[0];
-    const g: number = pixel[1];
-    const b: number = pixel[2];
-    const a: number = pixel[3];
-    material.uniforms.selectionMask.value = new THREE.Vector4(r, g, b, a);
+      const r: number = pixel[0];
+      const g: number = pixel[1];
+      const b: number = pixel[2];
+      const a: number = pixel[3];
+      material.uniforms.selectionMask.value = new THREE.Vector4(r, g, b, a);
+    }
     //debug obsolete
     material.uniforms.pointer.value = pointer.direction;
 
