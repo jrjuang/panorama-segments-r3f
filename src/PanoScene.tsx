@@ -73,12 +73,6 @@ const PanoScene = ({ pointer }: { pointer: { origin: THREE.Vector3, direction: T
   function changeMasks(boxRef: React.RefObject<THREE.Mesh>, masksPath: string) {
     textureLoader.load(masksPath, (masks: THREE.Texture) => {
       if (boxRef.current) {
-        // Keep RGB as intergers as IDs
-        masks.format =  THREE.RGBFormat;
-        masks.type = THREE.UnsignedByteType;
-        masks.magFilter = THREE.NearestFilter; // Avoid interpolation
-        masks.needsUpdate = true;
-
         boxRef.current.material.uniforms.masks.value = masks;
       }
       const tempCanvas = document.createElement("canvas");
