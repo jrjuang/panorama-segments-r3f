@@ -19,7 +19,12 @@ const App = () => {
       <PanoScene />
       <ambientLight />
       <pointLight position={[1, 5, 2]} />
-      <OrbitControls rotateSpeed={-0.2}/>
+      <OrbitControls rotateSpeed={-0.2}
+        mouseButtons={{
+          LEFT: THREE.MOUSE.NONE,
+          MIDDLE: THREE.MOUSE.NONE,
+          RIGHT: THREE.MOUSE.ROTATE
+        }} />
       <FovControls />
     </Canvas>
   )

@@ -131,6 +131,9 @@ const PanoScene = () => {
   // Selection of a segment of a mask
   useEffect(() => {
     const mouseUpOnSegment = (event: MouseEvent) => {
+      if (event.button !== 0) {
+        return;
+      }
       const canvas = gl.domElement;
       const masksContent = masksLookup.getContext("2d");
       if (!masksContent) { return; }
