@@ -9,9 +9,10 @@ npm run dev
 ```
 
 ## Usage  
-- Mouse hover: Highlight objects segmented in a panorama.
-- Left button: Drag to look around the scene. 
-- Click on a door: Change the room.
+- **Mouse hover**: Highlight objects segmented in a panorama.
+- **Click on a door**: Change the room.
+- **Left button**: Drag to look around the scene. 
 - **F2 Key**: Switch to each room in turn.
-- First-time loading may be slow; please wait about 5 seconds.
+- **First-time** loading may be slow; please wait about 5 seconds.
 
+![Demo](demo.gif)
