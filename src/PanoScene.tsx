@@ -65,12 +65,14 @@ const SkyboxMaterial = shaderMaterial(
 extend({ SkyboxMaterial });
 
 const PanoScene = () => {
+  const boxRef = useRef<THREE.Mesh>(null);
   const masksPathOfExr: Map<string, string> = new Map();
   masksPathOfExr.set("studio.exr", "masks2_studio.png");
   masksPathOfExr.set("brown.exr", "masks2_brown.png");
   masksPathOfExr.set("bathroom.exr", "masks2_bathroom.png");
 
-  const masksLookup: HTMLCanvasElement = document.createElement("canvas");
+  const dummyCanvas: HTMLCanvasElement = document.createElement("canvas");
+  const [masksLookup] = useState<HTMLCanvasElement>(dummyCanvas);
   const textureLoader = new THREE.TextureLoader();
   function changeMasks(boxRef: React.RefObject<THREE.Mesh>, masksPath: string) {
     textureLoader.load(masksPath, (masks: THREE.Texture) => {
@@ -93,17 +95,42 @@ const PanoScene = () => {
     return [x, y];
   }
 
-  const boxRef = useRef<THREE.Mesh>(null);
-
-  const segmentOfMask: Map<string, { action: () => void }> = new Map();
+  function rgb2Mask(pixel: Uint8ClampedArray): string {
+    return pixel[0].toString(16).padStart(2, "0") + pixel[1].toString(16).padStart(2, "0") + pixel[2].toString(16).padStart(2, "0");
+  }
   const [exrPath, setExrPath] = useState<string>("studio.exr");
+  const segmentOfMask: Map<string, { action: () => void }> = new Map();
   // Switch the scene by clicking on a segment of a mask
-  
+  segmentOfMask.set("0ea3e2", {
+    action: () => {
+      console.log("Door to bathroom");
+      setExrPath("bathroom.exr");
+    }
+  });
+  segmentOfMask.set("345984", {
+    action: () => {
+      console.log("Door to lounge");
+      setExrPath("brown.exr");
+    }
+  });
+  segmentOfMask.set("e8acdf", {
+    action: () => {
+      console.log("Door to studio");
+      setExrPath("studio.exr");
+    }
+  });
+  segmentOfMask.set("95b25f", {
+    action: () => {
+      console.log("Door to studio");
+      setExrPath("studio.exr");
+    }
+  });
+
   const { camera, gl } = useThree();
-  
+
   // Selection of a segment of a mask
   useEffect(() => {
-    const mouseUpToSwitchScene = (event: MouseEvent) => {
+    const mouseUpOnSegment = (event: MouseEvent) => {
       const canvas = gl.domElement;
       const masksContent = masksLookup.getContext("2d");
       if (!masksContent) { return; }
@@ -118,18 +145,20 @@ const PanoScene = () => {
       const y: number = Math.floor((1 - v) * masksLookup.height);
       const pixel: Uint8ClampedArray = masksContent.getImageData(x, y, 1, 1).data;
       if (0 === pixel[3]) { return; }
-      const mask: string = `${pixel[0]} ${pixel[1]} ${pixel[2]}`;
-      const selection: {} = segmentOfMask.get(mask);
+      const mask: string = rgb2Mask(pixel);
+      const segment: { action: () => void } | undefined = segmentOfMask.get(mask);
       console.log(`Mouse up at canvas ${event.clientX}, ${event.clientY};\n` +
         `UV: ${u}, ${v}; position at masks: ${x}, ${y};\n` +
-        `mask: ${mask}; selection: ${selection}`);
-      if (selection?.action) {
-        selection.action();
+        `mask: ${mask}; segment: ${segment}`);
+      if (!segment?.action) {
+        console.log("No action for this segment.");
+        return;
       }
+      segment.action();
     };
-    gl.domElement.addEventListener("mouseup", mouseUpToSwitchScene);
+    gl.domElement.addEventListener("mouseup", mouseUpOnSegment);
     return () => {
-      gl.domElement.removeEventListener("mouseup", mouseUpToSwitchScene);
+      gl.domElement.removeEventListener("mouseup", mouseUpOnSegment);
     }
   }, []);
   // Load the masks
