@@ -94,9 +94,14 @@ const PanoScene = () => {
   }
 
   const boxRef = useRef<THREE.Mesh>(null);
+
+  const segmentOfMask: Map<string, { action: () => void }> = new Map();
   const [exrPath, setExrPath] = useState<string>("studio.exr");
+  // Switch the scene by clicking on a segment of a mask
+  
   const { camera, gl } = useThree();
-  // Switch the scene by clicking on a mask
+  
+  // Selection of a segment of a mask
   useEffect(() => {
     const mouseUpToSwitchScene = (event: MouseEvent) => {
       const canvas = gl.domElement;
@@ -114,14 +119,13 @@ const PanoScene = () => {
       const pixel: Uint8ClampedArray = masksContent.getImageData(x, y, 1, 1).data;
       if (0 === pixel[3]) { return; }
       const mask: string = `${pixel[0]} ${pixel[1]} ${pixel[2]}`;
-      const selection: string = "not implemented yet";
+      const selection: {} = segmentOfMask.get(mask);
       console.log(`Mouse up at canvas ${event.clientX}, ${event.clientY};\n` +
         `UV: ${u}, ${v}; position at masks: ${x}, ${y};\n` +
         `mask: ${mask}; selection: ${selection}`);
-      setExrPath((prev: string) => {
-        console.log(`Not implemented yet to switch scene. Now the current scene is ${prev}`);
-        return prev;
-      });
+      if (selection?.action) {
+        selection.action();
+      }
     };
     gl.domElement.addEventListener("mouseup", mouseUpToSwitchScene);
     return () => {
