@@ -96,9 +96,6 @@ const PanoScene = () => {
   const boxRef = useRef<THREE.Mesh>(null);
   const [exrPath, setExrPath] = useState<string>("studio.exr");
   const { camera, gl } = useThree();
-  useEffect(() => {
-
-  }, []);
   // Switch the scene by clicking on a mask
   useEffect(() => {
     const mouseUpToSwitchScene = (event: MouseEvent) => {
@@ -153,6 +150,26 @@ const PanoScene = () => {
     window.addEventListener("keydown", keyDownToSwitchScene);
     return () => window.removeEventListener("keydown", keyDownToSwitchScene);
   }, []);
+  const [pointer, setPointer] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 1));
+  // Hover FX for masks
+  useEffect(() => {
+    const mouseMoveToHoverFX = (event: MouseEvent) => {
+      const canvas = gl.domElement;
+      const directionInWorld = new THREE.Vector3(
+        event.clientX / canvas.width * 2 - 1,
+        -event.clientY / canvas.height * 2 + 1,
+        0).unproject(camera).sub(camera.position);
+      directionInWorld.normalize();
+      setPointer((prev: THREE.Vector3) => {
+        prev.set(directionInWorld.x, directionInWorld.y, directionInWorld.z);
+        return prev;
+      });
+    };
+    gl.domElement.addEventListener("mousemove", mouseMoveToHoverFX);
+    return () => {
+      gl.domElement.removeEventListener("mousemove", mouseMoveToHoverFX);
+    }
+  }, []);
   // Update the shader uniforms
   useFrame(({ clock }) => {
     if (!boxRef.current) { return; }
@@ -160,7 +177,7 @@ const PanoScene = () => {
     material.uniforms.time.value = clock.getElapsedTime();
 
     // Hover FX for a specific mask
-    // refcotring: material.uniforms.pointer.value.set(pointer.direction.x, pointer.direction.y, pointer.direction.z);
+    material.uniforms.pointer.value.set(pointer.x, pointer.y, pointer.z);
     // Make the FX box follow the camera
     const pos = camera.position;
     boxRef.current.position.set(pos.x, pos.y, pos.z);
