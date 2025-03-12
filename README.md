@@ -14,6 +14,6 @@ npm run dev
 - **Right mouse button**: Drag to look around the scene.
 - **Mouse wheel**: Zoom in or out. 
 - **F2 Key**: Cycle through rooms.
-- **First-time loading may be slow; please wait about 5 seconds.**
+- **First-time loading when switching rooms may be slow; please wait about 5 seconds.**
 
 ![Demo](demo.gif)
